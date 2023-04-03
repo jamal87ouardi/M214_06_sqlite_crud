@@ -19,7 +19,7 @@ public class DB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String req = "CREATE TABLE Hotel (Nom TEXT,Prix float, Url text)";
+        String req = "CREATE TABLE Hotel (Nom TEXT Primary key,Prix float, Url text)";
         db.execSQL(req);
 
     }
