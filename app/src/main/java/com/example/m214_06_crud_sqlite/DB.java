@@ -13,13 +13,13 @@ import java.util.List;
 
 public class DB extends SQLiteOpenHelper {
     public DB(@Nullable Context context) {
-        super(context, "DB_Hotel", null, 1);
+        super(context, "DB_Hotel", null, 2);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String req = "CREATE TABLE Hotel (Nom TEXT Primary key,Prix float, Url text)";
+        String req = "CREATE TABLE Hotel (ID INTEGER PRIMARY KEY AUTOINCREMENT,Nom TEXT ,Prix float, Url text)";
         db.execSQL(req);
 
     }
@@ -33,11 +33,24 @@ public class DB extends SQLiteOpenHelper {
 
     }
 
+    public boolean search(int ID) {
+
+        List<Hotel> hotels = get_All();
+        boolean exist = false;
+        for(Hotel h : hotels) {
+
+            if(h.getID()==ID) exist=true;
+
+        }
+        return exist;
+    }
+
     public long add_Hotel(Hotel m) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+
 
 
         values.put("Nom", m.getNom());
@@ -46,15 +59,65 @@ public class DB extends SQLiteOpenHelper {
 
         values.put("Url",m.getUrl());
 
-        // Inserting Row
+
         long r = db.insert("Hotel", null, values);
 
-        // Closing database connection
+
         db.close();
 
         return r;
 
     }
+
+
+    public long updateHotel(int ID,String nom, float prix, String img) {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+
+
+        values.put("Nom", nom);
+
+        values.put("Prix",prix);
+
+        values.put("Url",img);
+
+
+        long r = db.update("Hotel", values, "ID=?", new String[]{String.valueOf(ID)});
+
+
+        db.close();
+
+        return r;
+
+
+
+    }
+
+    public long deleteHotel(int ID) {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+
+        long r = db.delete("Hotel", "ID=?", new String[]{String.valueOf(ID)});
+
+
+        db.close();
+
+        return r;
+
+
+
+    }
+
+
+
 
 
     public List<Hotel> get_All() {
@@ -67,10 +130,10 @@ public class DB extends SQLiteOpenHelper {
         if(cur.moveToFirst()) {
             do {
                 Hotel h = new Hotel();
-
-                h.setNom(cur.getString(0));
-                h.setPrix(cur.getFloat(1));
-                h.setUrl(cur.getString(2));
+                h.setID(cur.getInt(0));
+                h.setNom(cur.getString(1));
+                h.setPrix(cur.getFloat(2));
+                h.setUrl(cur.getString(3));
 
                 hotels.add(h);
             } while (cur.moveToNext());

@@ -40,6 +40,7 @@ public class ListerActivity extends AppCompatActivity {
 
                 Intent i = new Intent(getApplicationContext(), UpdateDelete.class);
 
+                i.putExtra("ID",selected_hotel.getID());
                 i.putExtra("nom",selected_hotel.getNom());
                 i.putExtra("prix",String.valueOf(selected_hotel.getPrix()));
                 i.putExtra("url",selected_hotel.getUrl());
@@ -49,5 +50,14 @@ public class ListerActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    // Resresh on restart                                                                                                                                                                                                                                                                                                                        &²
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
 }
